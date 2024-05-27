@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThingDef ParentName="MeleeWeaponUltratech">
+        <defName>HemoBladeBase</defName>
+        <label>hemogenic rapier</label>
+        <description>To the untrained eye, it appears as just a weapon of a bygone age; a long, sharp weapon with a curved guard. An elegant weapon utilized by melee specialists for piercing thrusts and masterful parrying. A deception, as veiled within the blade are unique mechanisms; some simple, others more arcane.\n\nNotably is a hemogen extracting device, a system of ‘veins’ in the weapon, and miniscule pores across the base of the splitting blade. Formed by these internal systems is a hemogen-utilizing cardiovascular system. Capable of moving blood from hosts, to itself and weaponizing it.\n\nUsing their own blood, a hemogen storage, or even the ichor of ones’ foe, the blade is able to form layers of strong, but brittle crystalline structure. The serrated edges formed are incredibly sharp and capable of destructive slashes. The shards that break off have a chance to splinter into the foe, causing intense bleeding.\n\nWhen provided hemogen or drained from a newly slaughtered foe, the intrinsic hybrid biomechanites within, violently replicate. Those not forming the crystal edge, the others enter the user’s bloodstream. In the body, they cause or extend a potent bloodfrenzy, increasing blood flow, wound healing and conciousness.</description>
+        <soundInteract>Interact_MonoSword</soundInteract>
+        <meleeHitSound>MeleeHit_MonoSword</meleeHitSound>
+        <equippedAngleOffset>-65</equippedAngleOffset>
+        <smeltable>false</smeltable>
+        <weaponClasses>
+            <li>Melee</li>
+            <li>MeleePiercer</li>
+        </weaponClasses>
+        <graphicData>
+            <texPath>Items/HemoBladeBase</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>1.4</drawSize>
+        </graphicData>
+        <statBases>
+            <MarketValue>1000</MarketValue>
+            <Mass>3</Mass>
+        </statBases>
+        <tools>
+            <li>
+                <label>handle</label>
+                <capacities>
+                    <li>Blunt</li>
+                </capacities>
+                <power>6</power>
+                <cooldownTime>1.6</cooldownTime>
+            </li>
+            <li>
+                <label>point</label>
+                <capacities>
+                    <li>Stab</li>
+                </capacities>
+                <power>20</power>
+                <cooldownTime>2.2</cooldownTime>
+                <armorPenetration>0.6</armorPenetration>
+            </li>
+            <li>
+                <label>edge</label>
+                <capacities>
+                    <li>Cut</li>
+                </capacities>
+                <power>16</power>
+                <cooldownTime>1.8</cooldownTime>
+                <armorPenetration>0.15</armorPenetration>
+            </li>
+        </tools>
+    </ThingDef>
+</Defs>

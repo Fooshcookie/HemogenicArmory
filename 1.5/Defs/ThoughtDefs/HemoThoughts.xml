@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ThoughtDef>
+        <defName>FC_HemoWeapons_OwnBloodDrawn</defName>
+        <thoughtClass>Thought_Memory</thoughtClass>
+        <validWhileDespawned>true</validWhileDespawned>
+        <durationDays>0.333</durationDays> <!-- ~8 hours -->
+        <stackLimit>5</stackLimit>
+        <stages>
+            <li>
+                <label>hemogenic drain</label>
+                <description>I had to use my own blood, I can still feel the pain...</description>
+                <baseMoodEffect>-3</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
     <Hemogenesis_Weaponry_SettingsCategory>Hemogenesis Weaponry</Hemogenesis_Weaponry_SettingsCategory>
-    <Hemogenesis_Weaponry_Settings_SettingName>Some Setting</Hemogenesis_Weaponry_Settings_SettingName>
+    <FC_HemoWeapons_UseCharges>Use blood charges</FC_HemoWeapons_UseCharges>
+    <FC_HemoWeapons_UseBlood>Charge with blood</FC_HemoWeapons_UseBlood>
+    <FC_HemoWeapons_NoCharges>No blood charges</FC_HemoWeapons_NoCharges>
+    <FC_HemoWeapons_BloodCharges>Blood charges</FC_HemoWeapons_BloodCharges>
 </LanguageData>

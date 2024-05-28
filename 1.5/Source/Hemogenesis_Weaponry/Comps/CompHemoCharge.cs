@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using RimWorld.Utility;
 using UnityEngine;
@@ -9,16 +9,45 @@ namespace Hemogenesis_Weaponry.Comps;
 
 public class HemoChargeUtil
 {
-    public static ConcurrentDictionary<string, CompHemoCharge> HemoChargeTools = new();
+    public static ConditionalWeakTable<Thing, List<WeakReference<CompHemoCharge>>> HemoChargeCompsByPawn = new();
+
+    public static List<WeakReference<CompHemoCharge>> FindCompFor(Thing instigator, bool forceRefresh = false)
+    {
+        List<WeakReference<CompHemoCharge>> comps = HemoChargeCompsByPawn.GetOrCreateValue(instigator);
+        if (!comps.Empty() && !forceRefresh) return comps;
+        RefreshList(instigator as Pawn, comps);
+        return comps;
+    }
+
+    public static void Cleanup(Pawn p)
+    {
+        if (p != null) HemoChargeCompsByPawn.Remove(p);
+    }
+
+    public static void Refresh(Pawn pawn)
+    {
+        if (pawn == null) return;
+        FindCompFor(pawn, true);
+    }
+
+    public static void RefreshList(Pawn pawn, List<WeakReference<CompHemoCharge>> comps)
+    {
+        if (pawn == null || comps == null) return;
+        comps.Clear();
+        foreach (ThingWithComps thingWithComps in pawn.equipment?.AllEquipmentListForReading ?? [])
+        {
+            if (thingWithComps.TryGetComp<CompHemoCharge>() is { } comp) comps.Add(new WeakReference<CompHemoCharge>(comp));
+        }
+    }
 }
 
 public class CompHemoCharge : ThingComp, ICompWithCharges
 {
-    public int remainingCharges = 0;
-    public bool useCharges = false;
-    public bool allowBloodDraw = false;
+    public int remainingCharges;
+    public bool useCharges;
+    public bool allowBloodDraw;
 
-    public CompProperties_HemoCharge HemoProps => (CompProperties_HemoCharge) props;
+    public CompProperties_HemoCharge HemoProps => (CompProperties_HemoCharge)props;
 
 
     public int RemainingCharges => remainingCharges;
@@ -37,28 +66,42 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             Holder.health.hediffSet.TryGetHediff(HemoProps.hediffForUserOnHit, out Hediff userHediff);
             if (userHediff == null)
             {
-                Holder.health.AddHediff(HemoProps.hediffForUserOnHit);
+                Hediff hediff = HediffMaker.MakeHediff(HemoProps.hediffForUserOnHit, Holder);
+                hediff.Severity = HemoProps.severityPerHit;
+                Holder.health.AddHediff(hediff);
             }
             else
             {
                 userHediff.Severity += HemoProps.severityPerHit;
             }
         }
+
         return damageInfo;
     }
 
     public bool AttemptRecharge()
     {
-        //TODO: Draw from blood bag or wounding
+        //TODO: Draw from blood bag
         if (allowBloodDraw)
         {
+            bool wounded = false;
             while (RemainingCharges < MaxCharges)
             {
                 // Apply a cut hediff to the pawn and add a charge
-                Hediff hediff = HediffMaker.MakeHediff(HemoProps.hediffForBloodCharge, Holder);
-                if (!Holder.health.WouldDieAfterAddingHediff(hediff))
+                Pawn holder = Holder;
+                Hediff hediff = HediffMaker.MakeHediff(HemoProps.hediffForBloodCharge, holder);
+                if (!holder.health.WouldDieAfterAddingHediff(hediff))
                 {
-                    Holder.health.AddHediff(hediff);
+                    if (!wounded)
+                    {
+                        holder.needs?.mood?.thoughts?.memories?.TryGainMemory(Hemogenesis_WeaponryDefOf.FC_HemoWeapons_OwnBloodDrawn);
+                    }
+                    wounded = true;
+                    holder.health.AddHediff(hediff);
+                    hediff.sourceDef = parent.def;
+                    BattleLogEntry_ItemUsed logEntryItemUsed = new(holder, holder, parent.def, RulePackDefOf.Event_ItemUsed);
+                    hediff.combatLogEntry = new WeakReference<LogEntry>(logEntryItemUsed);
+                    hediff.combatLogText = logEntryItemUsed.ToGameStringFromPOV(holder);
                     remainingCharges++;
                 }
                 else
@@ -69,12 +112,6 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         }
 
         return RemainingCharges > 0;
-    }
-
-    public override void Notify_UsedVerb(Pawn pawn, Verb verb)
-    {
-        base.Notify_UsedVerb(pawn, verb);
-        HemoChargeUtil.HemoChargeTools.AddOrUpdate(verb.tool.id, this, (_, _) => this);
     }
 
     protected Pawn Holder => (parent?.ParentHolder as Pawn_EquipmentTracker)?.pawn;
@@ -90,6 +127,24 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         }
     }
 
+    public override void Notify_Killed(Map prevMap, DamageInfo? dinfo = null)
+    {
+        base.Notify_Killed(prevMap, dinfo);
+        HemoChargeUtil.Cleanup(Holder);
+    }
+
+    public override void Notify_Equipped(Pawn pawn)
+    {
+        base.Notify_Equipped(pawn);
+        HemoChargeUtil.Refresh(pawn);
+    }
+
+    public override void Notify_Unequipped(Pawn pawn)
+    {
+        base.Notify_Unequipped(pawn);
+        HemoChargeUtil.Refresh(pawn);
+    }
+
     public IEnumerable<Gizmo> CompGetEquipmentGizmosExtra()
     {
         foreach (Gizmo gizmo in base.CompGetGizmosExtra())
@@ -97,14 +152,14 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
 
         if (!HemoProps.displayGizmoWhileUndrafted && !(Holder?.Drafted ?? false)) yield break;
         yield return new Gizmo_BloodCharges(this);
-        yield return new Command_Toggle()
+        yield return new Command_Toggle
         {
             defaultLabel = "FC_HemoWeapons_UseCharges".Translate(),
             toggleAction = () => { useCharges = !useCharges; },
             isActive = () => useCharges,
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/UseCharges")
         };
-        yield return new Command_Toggle()
+        yield return new Command_Toggle
         {
             defaultLabel = "FC_HemoWeapons_UseBlood".Translate(),
             toggleAction = () => { allowBloodDraw = !allowBloodDraw; },

@@ -90,9 +90,9 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         }
     }
 
-    public override IEnumerable<Gizmo> CompGetWornGizmosExtra()
+    public IEnumerable<Gizmo> CompGetEquipmentGizmosExtra()
     {
-        foreach (Gizmo gizmo in base.CompGetWornGizmosExtra())
+        foreach (Gizmo gizmo in base.CompGetGizmosExtra())
             yield return gizmo;
 
         if (!HemoProps.displayGizmoWhileUndrafted && !(Holder?.Drafted ?? false)) yield break;

@@ -1,45 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using RimWorld;
 using RimWorld.Utility;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace Hemogenesis_Weaponry.Comps;
-
-public class HemoChargeUtil
-{
-    public static ConditionalWeakTable<Thing, List<WeakReference<CompHemoCharge>>> HemoChargeCompsByPawn = new();
-
-    public static List<WeakReference<CompHemoCharge>> FindCompFor(Thing instigator, bool forceRefresh = false)
-    {
-        List<WeakReference<CompHemoCharge>> comps = HemoChargeCompsByPawn.GetOrCreateValue(instigator);
-        if (!comps.Empty() && !forceRefresh) return comps;
-        RefreshList(instigator as Pawn, comps);
-        return comps;
-    }
-
-    public static void Cleanup(Pawn p)
-    {
-        if (p != null) HemoChargeCompsByPawn.Remove(p);
-    }
-
-    public static void Refresh(Pawn pawn)
-    {
-        if (pawn == null) return;
-        FindCompFor(pawn, true);
-    }
-
-    public static void RefreshList(Pawn pawn, List<WeakReference<CompHemoCharge>> comps)
-    {
-        if (pawn == null || comps == null) return;
-        comps.Clear();
-        foreach (ThingWithComps thingWithComps in pawn.equipment?.AllEquipmentListForReading ?? [])
-        {
-            if (thingWithComps.TryGetComp<CompHemoCharge>() is { } comp) comps.Add(new WeakReference<CompHemoCharge>(comp));
-        }
-    }
-}
 
 public class CompHemoCharge : ThingComp, ICompWithCharges
 {
@@ -55,6 +22,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
     public int MaxCharges => HemoProps.maxCharges;
 
     public string LabelRemaining => $"{(object)RemainingCharges} / {(object)MaxCharges}";
+    public void RechargeFully() => remainingCharges = MaxCharges;
 
     public DamageInfo AdjustDamageInfo(DamageInfo damageInfo, Thing damagedThing)
     {
@@ -89,7 +57,8 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             {
                 // Apply a cut hediff to the pawn and add a charge
                 Pawn holder = Holder;
-                Hediff hediff = HediffMaker.MakeHediff(HemoProps.hediffForBloodCharge, holder);
+                BodyPartRecord part = holder.health.hediffSet.GetNotMissingParts(tag: BodyPartTagDefOf.ManipulationLimbCore).FirstOrDefault();
+                Hediff hediff = HediffMaker.MakeHediff(HemoProps.hediffForBloodCharge, holder, part);
                 if (!holder.health.WouldDieAfterAddingHediff(hediff))
                 {
                     if (!wounded)
@@ -119,12 +88,10 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
     public override void Notify_KilledPawn(Pawn pawn)
     {
         base.Notify_KilledPawn(pawn);
-        if (pawn.RaceProps.IsFlesh)
-        {
-            remainingCharges += HemoProps.chargesOnKill;
-            if (remainingCharges > MaxCharges)
-                remainingCharges = MaxCharges;
-        }
+        if (!pawn.RaceProps.IsFlesh) return;
+        remainingCharges += HemoProps.chargesOnKill;
+        if (remainingCharges > MaxCharges)
+            remainingCharges = MaxCharges;
     }
 
     public override void Notify_Killed(Map prevMap, DamageInfo? dinfo = null)
@@ -166,6 +133,34 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             isActive = () => allowBloodDraw,
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
         };
+        yield return new Command_Target
+        {
+            defaultLabel = "FC_HemoWeapons_HemoDrain".Translate(),
+            action = target =>
+            {
+                Job job = JobMaker.MakeJob(Hemogenesis_WeaponryDefOf.FC_HemoWeapons_HemoDrain, target);
+                job.locomotionUrgency = LocomotionUrgency.Jog;
+                job.playerForced = true;
+                job.source = parent;
+                Holder.jobs.TryTakeOrderedJob(job, JobTag.DraftedOrder);
+            },
+            targetingParams = new TargetingParameters
+            {
+                canTargetSelf = false,
+                canTargetBuildings = false,
+                canTargetCorpses = false,
+                canTargetPawns = true,
+                canTargetMechs = false,
+                canTargetLocations = false,
+                canTargetPlants = false,
+                onlyTargetIncapacitatedPawns = true,
+                canTargetHumans = true,
+                canTargetAnimals = true,
+                canTargetMutants = true,
+                canTargetBloodfeeders = true
+            },
+            icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
+        };
         if (DebugSettings.ShowDevGizmos && RemainingCharges < MaxCharges)
         {
             Command_Action commandAction = new Command_Action
@@ -192,26 +187,6 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         reason = "FC_HemoWeapons_NoCharges".Translate();
         return false;
     }
-}
-
-public class CompProperties_HemoCharge : CompProperties
-{
-    public int maxCharges = 3;
-    public int chargesOnKill = 1;
-    public HediffDef hediffForBloodCharge;
-    public HediffDef hediffForUserOnHit;
-    public float severityPerHit = 0.1f;
-    public float damageMultiplierForCharge = 1f;
-    public bool displayGizmoWhileUndrafted;
-
-    public override void ResolveReferences(ThingDef parentDef)
-    {
-        base.ResolveReferences(parentDef);
-        hediffForBloodCharge ??= HediffDefOf.Cut;
-        hediffForUserOnHit ??= HediffDefOf.BloodRage;
-    }
-
-    public CompProperties_HemoCharge() => compClass = typeof(CompHemoCharge);
 }
 
 public class Gizmo_BloodCharges : Gizmo

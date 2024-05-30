@@ -5,4 +5,6 @@
     <FC_HemoWeapons_UseBlood>Charge with blood</FC_HemoWeapons_UseBlood>
     <FC_HemoWeapons_NoCharges>No blood charges</FC_HemoWeapons_NoCharges>
     <FC_HemoWeapons_BloodCharges>Blood charges</FC_HemoWeapons_BloodCharges>
+    <FC_HemoWeapons_HemoDrain>Hemo Drain</FC_HemoWeapons_HemoDrain>
+    <FC_HemoWeapons_HemoDrainText>Feed my {0}!</FC_HemoWeapons_HemoDrainText>
 </LanguageData>

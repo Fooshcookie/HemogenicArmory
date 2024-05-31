@@ -59,6 +59,7 @@
                 <hediffForBloodCharge>Cut</hediffForBloodCharge>
                 <hediffForUserOnHit>BloodRage</hediffForUserOnHit>
                 <severityPerHit>0.3</severityPerHit>
+                <hemogenPerBloodCharge>0.2</hemogenPerBloodCharge>
             </li>
         </comps>
     </ThingDef>

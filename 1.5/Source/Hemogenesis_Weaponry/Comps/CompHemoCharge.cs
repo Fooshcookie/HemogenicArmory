@@ -13,6 +13,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
     public int remainingCharges;
     public bool useCharges;
     public bool allowBloodDraw;
+    public bool allowHemogenDraw;
 
     public CompProperties_HemoCharge HemoProps => (CompProperties_HemoCharge)props;
 
@@ -50,7 +51,15 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
     public bool AttemptRecharge()
     {
         //TODO: Draw from blood bag
-        if (allowBloodDraw)
+        if (allowHemogenDraw && ModsConfig.BiotechActive && Holder.genes?.GetFirstGeneOfType<Gene_Hemogen>() is {} gene)
+        {
+            while (RemainingCharges < MaxCharges && gene.Value >= HemoProps.hemogenPerBloodCharge * 2)
+            {
+                remainingCharges++;
+                gene.Value -= HemoProps.hemogenPerBloodCharge;
+            }
+        }
+        if (allowBloodDraw && RemainingCharges < MaxCharges)
         {
             bool wounded = false;
             while (RemainingCharges < MaxCharges)
@@ -133,6 +142,16 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             isActive = () => allowBloodDraw,
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
         };
+        if (ModsConfig.BiotechActive && Holder.IsBloodfeeder())
+        {
+            yield return new Command_Toggle
+            {
+                defaultLabel = "FC_HemoWeapons_UseHemogen".Translate(),
+                toggleAction = () => { allowHemogenDraw = !allowHemogenDraw; },
+                isActive = () => allowHemogenDraw,
+                icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
+            };
+        }
         yield return new Command_Target
         {
             defaultLabel = "FC_HemoWeapons_HemoDrain".Translate(),
@@ -177,6 +196,8 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         base.PostExposeData();
         Scribe_Values.Look(ref useCharges, "useCharges");
         Scribe_Values.Look(ref allowBloodDraw, "allowBloodDraw");
+        Scribe_Values.Look(ref allowHemogenDraw, "allowHemogenDraw");
+        Scribe_Values.Look(ref remainingCharges, "remainingCharges");
     }
 
     public bool CanBeUsed(out string reason)

@@ -3,6 +3,7 @@
     <Hemogenesis_Weaponry_SettingsCategory>Hemogenesis Weaponry</Hemogenesis_Weaponry_SettingsCategory>
     <FC_HemoWeapons_UseCharges>Use blood charges</FC_HemoWeapons_UseCharges>
     <FC_HemoWeapons_UseBlood>Charge with blood</FC_HemoWeapons_UseBlood>
+    <FC_HemoWeapons_UseHemogen>Charge with hemogen</FC_HemoWeapons_UseHemogen>
     <FC_HemoWeapons_NoCharges>No blood charges</FC_HemoWeapons_NoCharges>
     <FC_HemoWeapons_BloodCharges>Blood charges</FC_HemoWeapons_BloodCharges>
     <FC_HemoWeapons_HemoDrain>Hemo Drain</FC_HemoWeapons_HemoDrain>

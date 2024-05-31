@@ -7,6 +7,7 @@ public class CompProperties_HemoCharge : CompProperties
 {
     public int maxCharges = 3;
     public int chargesOnKill = 1;
+    public float hemogenPerBloodCharge = 0.2f;
     public HediffDef hediffForBloodCharge;
     public HediffDef hediffForUserOnHit;
     public float severityPerHit = 0.1f;

@@ -9,7 +9,7 @@
         <stages>
             <li>
                 <label>hemogenic drain</label>
-                <description>I had to use my own blood, I can still feel the pain...</description>
+                <description>A weapon siphoned my blood, it was unplesant...</description>
                 <baseMoodEffect>-3</baseMoodEffect>
             </li>
         </stages>

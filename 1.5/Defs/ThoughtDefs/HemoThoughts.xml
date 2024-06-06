@@ -9,7 +9,7 @@
         <stages>
             <li>
                 <label>hemogenic drain</label>
-                <description>A weapon siphoned my blood, it was unplesant...</description>
+                <description>A weapon siphoned my blood, it was unpleasant...</description>
                 <baseMoodEffect>-3</baseMoodEffect>
             </li>
         </stages>

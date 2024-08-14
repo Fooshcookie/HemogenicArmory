@@ -10,6 +10,7 @@ public class HemoChargeUtil
 
     public static List<WeakReference<CompHemoCharge>> FindCompFor(Thing instigator, bool forceRefresh = false)
     {
+        if (instigator == null) return [];
         List<WeakReference<CompHemoCharge>> comps = HemoChargeCompsByPawn.GetOrCreateValue(instigator);
         if (!comps.Empty() && !forceRefresh) return comps;
         RefreshList(instigator as Pawn, comps);

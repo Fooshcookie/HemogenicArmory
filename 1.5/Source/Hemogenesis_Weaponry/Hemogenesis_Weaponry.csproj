@@ -67,6 +67,12 @@
     <CommonFiles Include="../../../Common/**" />
     <CompatibilityFiles Include="../../../Compatibility/**" />
     <ExtraFiles Include="../../../LoadFolders.xml;../../../LICENSE;../../../README.md" />
+    <ReleaseFiles Update="..\..\Defs\ThingDefs\HemoGun.xml">
+      <Link>HemogenicArmory\1.5\Defs\ThingDefs\HemoGun.xml</Link>
+    </ReleaseFiles>
+    <ReleaseFiles Update="..\..\Defs\ThingDefs\HemoAccessories.xml">
+      <Link>HemogenicArmory\1.5\Defs\ThingDefs\HemoAccessories.xml</Link>
+    </ReleaseFiles>
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
     <RemoveDir Condition="Exists('../../../Release')" Directories="../../../Release" />

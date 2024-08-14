@@ -50,8 +50,21 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
 
     public bool AttemptRecharge()
     {
-        //TODO: Draw from blood bag
-        if (allowHemogenDraw && ModsConfig.BiotechActive && Holder.genes?.GetFirstGeneOfType<Gene_Hemogen>() is {} gene)
+        if (Holder.apparel?.WornApparel?.Find(a => a.def?.apparel?.tags.Any(t => t.Equals("FC_HemogenicWeapons_BloodSource")) ?? false) is { } bloodBag &&
+            bloodBag.TryGetComp<CompApparelReloadable>() is { } reloadableComp && reloadableComp.CanBeUsed(out _))
+        {
+            do
+            {
+                reloadableComp.UsedOnce();
+                remainingCharges++;
+            }
+            while (RemainingCharges < MaxCharges && reloadableComp.CanBeUsed(out _));
+            if (RemainingCharges < MaxCharges)
+                Messages.Message("FC_HemoWeapons_OutOfCharges".Translate(parent.Label).CapitalizeFirst(), new TargetInfo(Holder.PositionHeld, Holder.MapHeld),
+                    MessageTypeDefOf.NeutralEvent, historical: false);
+        }
+
+        if (allowHemogenDraw && RemainingCharges < MaxCharges && ModsConfig.BiotechActive && Holder.genes?.GetFirstGeneOfType<Gene_Hemogen>() is { } gene)
         {
             while (RemainingCharges < MaxCharges && gene.Value >= HemoProps.hemogenPerBloodCharge * 2)
             {
@@ -59,6 +72,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
                 gene.Value -= HemoProps.hemogenPerBloodCharge;
             }
         }
+
         if (allowBloodDraw && RemainingCharges < MaxCharges)
         {
             bool wounded = false;
@@ -74,6 +88,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
                     {
                         holder.needs?.mood?.thoughts?.memories?.TryGainMemory(Hemogenesis_WeaponryDefOf.FC_HemoWeapons_OwnBloodDrawn);
                     }
+
                     wounded = true;
                     holder.health.AddHediff(hediff);
                     hediff.sourceDef = parent.def;
@@ -131,6 +146,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         yield return new Command_Toggle
         {
             defaultLabel = "FC_HemoWeapons_UseCharges".Translate(),
+            defaultDesc = "FC_HemoWeapons_UseChargesDesc".Translate(),
             toggleAction = () => { useCharges = !useCharges; },
             isActive = () => useCharges,
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/UseCharges")
@@ -138,6 +154,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
         yield return new Command_Toggle
         {
             defaultLabel = "FC_HemoWeapons_UseBlood".Translate(),
+            defaultDesc = "FC_HemoWeapons_UseBloodDesc".Translate(),
             toggleAction = () => { allowBloodDraw = !allowBloodDraw; },
             isActive = () => allowBloodDraw,
             icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
@@ -147,14 +164,17 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             yield return new Command_Toggle
             {
                 defaultLabel = "FC_HemoWeapons_UseHemogen".Translate(),
+                defaultDesc = "FC_HemoWeapons_UseHemogenDesc".Translate(),
                 toggleAction = () => { allowHemogenDraw = !allowHemogenDraw; },
                 isActive = () => allowHemogenDraw,
                 icon = ContentFinder<Texture2D>.Get("UI/Buttons/AllowBloodDraw")
             };
         }
+
         yield return new Command_Target
         {
             defaultLabel = "FC_HemoWeapons_HemoDrain".Translate(),
+            defaultDesc = "FC_HemoWeapons_HemoDrainDesc".Translate(),
             action = target =>
             {
                 Job job = JobMaker.MakeJob(Hemogenesis_WeaponryDefOf.FC_HemoWeapons_HemoDrain, target);
@@ -185,6 +205,7 @@ public class CompHemoCharge : ThingComp, ICompWithCharges
             Command_Action commandAction = new Command_Action
             {
                 defaultLabel = "DEV: Reload to full",
+                defaultDesc = "DEV: Reload to full",
                 action = () => remainingCharges = MaxCharges
             };
             yield return commandAction;

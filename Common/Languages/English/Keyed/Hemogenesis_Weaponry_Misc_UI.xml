@@ -4,8 +4,15 @@
     <FC_HemoWeapons_UseCharges>Use blood charges</FC_HemoWeapons_UseCharges>
     <FC_HemoWeapons_UseBlood>Charge with blood</FC_HemoWeapons_UseBlood>
     <FC_HemoWeapons_UseHemogen>Charge with hemogen</FC_HemoWeapons_UseHemogen>
+
+    <FC_HemoWeapons_UseChargesDesc>Use blood charges to significantly power up attacks.\nNote that the weapon will recover blood charges on kill. If it runs out sooner, there are other sources of blood around a battlefield...</FC_HemoWeapons_UseChargesDesc>
+    <FC_HemoWeapons_UseBloodDesc>Have the weapon injure the wielder to acquire the hemogenic power it needs</FC_HemoWeapons_UseBloodDesc>
+    <FC_HemoWeapons_UseHemogenDesc>Have the weapon use the wielder's own hemogen to power itself</FC_HemoWeapons_UseHemogenDesc>
+
     <FC_HemoWeapons_NoCharges>No blood charges</FC_HemoWeapons_NoCharges>
     <FC_HemoWeapons_BloodCharges>Blood charges</FC_HemoWeapons_BloodCharges>
     <FC_HemoWeapons_HemoDrain>Hemo Drain</FC_HemoWeapons_HemoDrain>
+    <FC_HemoWeapons_HemoDrainDesc>Use on a downed pawn to consume all of their remaining life-blood to restore all blood charges.</FC_HemoWeapons_HemoDrainDesc>
     <FC_HemoWeapons_HemoDrainText>Feed my {0}!</FC_HemoWeapons_HemoDrainText>
+    <FC_HemoWeapons_OutOfCharges>{0} is out of charges</FC_HemoWeapons_OutOfCharges>
 </LanguageData>

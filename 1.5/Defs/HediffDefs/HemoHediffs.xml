@@ -2,12 +2,12 @@
 
 <Defs>
     <HediffDef>
-        <defName>BloodFrenzy</defName>
+        <defName>FC_HemoWeapons_BloodFrenzy</defName>
         <label>blood frenzy</label>
         <description>Excited hybrid-biomechanites. Painful, but able to heighten awareness, speed up blood flow and help mend wounds.</description>
         <hediffClass>HediffWithComps</hediffClass>
         <tendable>false</tendable>
-        <MaxSeverity>1.0</MaxSeverity>
+        <maxSeverity>1.0</maxSeverity>
         <isBad>False</isBad>
         <stages>
             <li>

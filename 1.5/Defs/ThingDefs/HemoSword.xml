@@ -2,7 +2,7 @@
 
 <Defs>
     <ThingDef ParentName="MeleeWeaponUltratech">
-        <defName>FC_HemoSword</defName>
+        <defName>FC_HemoWeapons_Sword</defName>
         <label>hemogenic rapier</label>
         <description>A dark, ancient weapon of mysterious design. Sporting an ancient earthen design, it is by craft and in function a common rapier. While able to deliver deadly, piercing thrusts on its own, the technology within is far more notable. Through an intricate system of internal nanowoven veins and handle-hidden corded needle, hemogen or raw blood can be drawn and fed to it. A sharp trigger on the handle allows the user to manually control the process. When pulled, it will rapidly and dangerously siphon blood from the connected source.\n \nThe excitable hybrid biomechanites contained within the weapon digest the blood, and utilize it to duplicate rapidly. Part of the duplicated bionanites enter the cardiovascular system of the wielder causing a bloodfrenzy, which rapidly improves blood flow, coagulation-speed and awareness. The remaining nanites are capable of crystalizing a crimson obsidian-like edge around the blade. This edge, though brittle, allows the weapon to be utilized more akin to a cleaver, hacking off limbs easily. These fragile bloodshards tend to shatter, commonly leaving behind lacerating fragments.</description>
         <soundInteract>Interact_MonoSword</soundInteract>
@@ -57,11 +57,10 @@
                 <damageMultiplierForCharge>2.5</damageMultiplierForCharge>
                 <displayGizmoWhileUndrafted>false</displayGizmoWhileUndrafted>
                 <hediffForBloodCharge>Cut</hediffForBloodCharge>
-                <hediffForUserOnHit>BloodFrenzy</hediffForUserOnHit>
+                <hediffForUserOnHit>FC_HemoWeapons_BloodFrenzy</hediffForUserOnHit>
                 <severityPerHit>0.15</severityPerHit>
                 <hemogenPerBloodCharge>0.2</hemogenPerBloodCharge>
             </li>
         </comps>
     </ThingDef>
-
 </Defs>

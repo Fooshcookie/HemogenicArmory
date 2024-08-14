@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Defs>
+    <ThingDef ParentName="BaseBullet">
+        <defName>FC_HemogenicBullet_Revolver</defName>
+        <label>hemogenic revolver bullet</label>
+        <graphicData>
+            <texPath>Things/Projectile/Bullet_Small</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <projectile>
+            <damageDef>FC_HemoWeapons_Bullet</damageDef>
+            <damageAmountBase>12</damageAmountBase>
+            <stoppingPower>1</stoppingPower>
+            <speed>55</speed>
+        </projectile>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseHumanMakeableGun">
+        <defName>FC_HemoWeapons_Revolver</defName>
+        <label>hemogenic revolver</label>
+        <description>An ancient pattern double-action revolver. It has a scrolling deep red engraving which seems to move and pulse as if powered by an inner heart.</description>
+        <possessionCount>1</possessionCount>
+        <graphicData>
+            <texPath>Things/Item/Equipment/WeaponRanged/Revolver</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <uiIconScale>1.4</uiIconScale>
+        <soundInteract>Interact_Revolver</soundInteract>
+        <statBases>
+            <WorkToMake>4000</WorkToMake>
+            <Mass>1.4</Mass>
+            <AccuracyTouch>0.80</AccuracyTouch>
+            <AccuracyShort>0.75</AccuracyShort>
+            <AccuracyMedium>0.45</AccuracyMedium>
+            <AccuracyLong>0.35</AccuracyLong>
+            <RangedWeapon_Cooldown>1.6</RangedWeapon_Cooldown>
+        </statBases>
+        <weaponTags>
+            <li>SimpleGun</li>
+            <li>Revolver</li>
+        </weaponTags>
+        <weaponClasses>
+            <li>RangedLight</li>
+        </weaponClasses>
+        <costList>
+            <Steel>30</Steel>
+            <ComponentIndustrial>2</ComponentIndustrial>
+        </costList>
+        <recipeMaker>
+            <skillRequirements>
+                <Crafting>3</Crafting>
+            </skillRequirements>
+            <displayPriority>400</displayPriority>
+        </recipeMaker>
+        <verbs>
+            <li>
+                <verbClass>Verb_Shoot</verbClass>
+                <hasStandardCommand>true</hasStandardCommand>
+                <defaultProjectile>FC_HemogenicBullet_Revolver</defaultProjectile>
+                <warmupTime>0.3</warmupTime>
+                <range>25.9</range>
+                <soundCast>Shot_Revolver</soundCast>
+                <soundCastTail>GunTail_Light</soundCastTail>
+                <muzzleFlashScale>9</muzzleFlashScale>
+            </li>
+        </verbs>
+        <tools>
+            <li>
+                <label>grip</label>
+                <capacities>
+                    <li>Blunt</li>
+                </capacities>
+                <power>9</power>
+                <cooldownTime>2</cooldownTime>
+            </li>
+            <li>
+                <label>barrel</label>
+                <capacities>
+                    <li>Blunt</li>
+                    <li>Poke</li>
+                </capacities>
+                <power>9</power>
+                <cooldownTime>2</cooldownTime>
+            </li>
+        </tools>
+        <comps>
+            <li Class="Hemogenesis_Weaponry.Comps.CompProperties_HemoCharge">
+                <maxCharges>3</maxCharges>
+                <chargesOnKill>1</chargesOnKill>
+                <damageMultiplierForCharge>2.5</damageMultiplierForCharge>
+                <displayGizmoWhileUndrafted>false</displayGizmoWhileUndrafted>
+                <hediffForBloodCharge>Cut</hediffForBloodCharge>
+                <hediffForUserOnHit>FC_HemoWeapons_BloodFrenzy</hediffForUserOnHit>
+                <severityPerHit>0.15</severityPerHit>
+                <hemogenPerBloodCharge>0.2</hemogenPerBloodCharge>
+            </li>
+        </comps>
+    </ThingDef>
+</Defs>

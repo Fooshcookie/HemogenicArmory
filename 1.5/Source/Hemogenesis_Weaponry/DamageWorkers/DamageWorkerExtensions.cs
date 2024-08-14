@@ -3,14 +3,12 @@ using Verse;
 
 namespace Hemogenesis_Weaponry.DamageWorkers;
 
-public class DamageWorker_HemogenicCut : DamageWorker_Cut
+public static class DamageWorkerExtensions
 {
-    public override DamageResult Apply(DamageInfo dinfo, Thing thing)
-    {
-        return base.Apply(thing is Pawn pawn && pawn.RaceProps.IsFlesh
+    public static DamageInfo AdjustDamageInfo(this DamageWorker_AddInjury worker, DamageInfo dinfo, Thing thing) =>
+        thing is Pawn pawn && pawn.RaceProps.IsFlesh
             ? HemoChargeUtil.FindCompFor(dinfo.Instigator)
                 ?.FirstOrDefault(t => t.Target?.parent.def == dinfo.Weapon)
                 ?.Target?.AdjustDamageInfo(dinfo, thing) ?? dinfo
-            : dinfo, thing);
-    }
+            : dinfo;
 }

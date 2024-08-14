@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Defs>
+    <ThingDef ParentName="UnfinishedBase">
+        <defName>FC_HemogenicWeapons_Apparel_UnfinishedBloodbag</defName>
+        <label>unfinished bloodbag</label>
+        <description>An unfinished bloodbag.</description>
+        <statBases>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <graphicData>
+            <texPath>Items/FC_HemoWeapons_BloodBag/FC_HemoWeapons_BloodBagUnfinished</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <stuffCategories Inherit="false" />
+    </ThingDef>
+
+    <ThingDef ParentName="ApparelBase">
+        <defName>FC_HemogenicWeapons_Apparel_BloodBag</defName>
+        <label>blood bag</label>
+        <description>A blood bag which can be connected up to hemogenic weaponry to provide blood charges without needing to sacrifice the wielder's own blood or hemogen in combat.</description>
+        <techLevel>Industrial</techLevel>
+        <comps>
+            <li Class="CompProperties_ApparelReloadable">
+                <maxCharges>5</maxCharges>
+                <ammoDef>HemogenPack</ammoDef>
+                <ammoCountPerCharge>1</ammoCountPerCharge>
+                <baseReloadTicks>60</baseReloadTicks>
+                <soundReload>Standard_Reload</soundReload>
+                <chargeNoun>blood charge</chargeNoun>
+                <displayGizmoWhileUndrafted>false</displayGizmoWhileUndrafted>
+            </li>
+        </comps>
+        <recipeMaker>
+            <unfinishedThingDef>FC_HemogenicWeapons_Apparel_UnfinishedBloodbag</unfinishedThingDef>
+            <researchPrerequisite>Deathrest</researchPrerequisite>
+            <recipeUsers>
+                <li>TableMachining</li>
+            </recipeUsers>
+            <useIngredientsForColor>false</useIngredientsForColor>
+            <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+            <workSkill>Crafting</workSkill>
+            <effectWorking>Bloodfeed_Warmup</effectWorking>
+            <soundWorking>Recipe_Surgery</soundWorking>
+            <skillRequirements>
+                <Crafting>4</Crafting>
+            </skillRequirements>
+            <displayPriority>330</displayPriority>
+        </recipeMaker>
+        <costList>
+            <HemogenPack>3</HemogenPack>
+            <MedicineIndustrial>3</MedicineIndustrial>
+            <Steel>1</Steel>
+        </costList>
+        <graphicData>
+            <texPath>Items/FC_HemoWeapons_BloodBag/FC_HemoWeapons_BloodBagFilled</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <tickerType>Normal</tickerType>
+        <statBases>
+            <WorkToMake>14000</WorkToMake>
+            <Mass>1</Mass>
+            <Flammability>0.4</Flammability>
+            <EquipDelay>2</EquipDelay>
+        </statBases>
+        <thingSetMakerTags>
+            <li>RewardStandardQualitySuper</li>
+        </thingSetMakerTags>
+        <thingCategories>
+            <li>ApparelUtility</li>
+        </thingCategories>
+        <apparel>
+            <countsAsClothingForNudity>false</countsAsClothingForNudity>
+            <scoreOffset>4</scoreOffset>
+            <wornGraphicPath>Items/FC_HemoWeapons_BloodBag/FC_HemoWeapons_BloodBagFilled</wornGraphicPath>
+            <wornGraphicData>
+                <renderUtilityAsPack>true</renderUtilityAsPack>
+                <east>
+                    <offset>(-0.35,-0.05)</offset>
+                    <thin>
+                        <offset>(0.05,0)</offset>
+                    </thin>
+                    <hulk>
+                        <offset>(-0.1,0)</offset>
+                    </hulk>
+                    <fat>
+                        <offset>(-0.15,0)</offset>
+                    </fat>
+                </east>
+                <west>
+                    <offset>(0.35,-0.05)</offset>
+                    <thin>
+                        <offset>(-0.05,0)</offset>
+                    </thin>
+                    <hulk>
+                        <offset>(0.1,0)</offset>
+                    </hulk>
+                    <fat>
+                        <offset>(0.15,0)</offset>
+                    </fat>
+                </west>
+                <male>
+                    <scale>(0.2,0.2)</scale>
+                </male>
+                <female>
+                    <scale>(0.2,0.2)</scale>
+                </female>
+                <thin>
+                    <scale>(0.27,0.27)</scale>
+                </thin>
+                <hulk>
+                    <scale>(0.29,0.29)</scale>
+                </hulk>
+                <fat>
+                    <scale>(0.29,0.29)</scale>
+                </fat>
+
+            </wornGraphicData>
+            <careIfWornByCorpse>false</careIfWornByCorpse>
+            <careIfDamaged>false</careIfDamaged>
+            <wearPerDay>0</wearPerDay>
+            <bodyPartGroups>
+                <li>Waist</li>
+            </bodyPartGroups>
+            <layers>
+                <li>Belt</li>
+            </layers>
+            <tags>
+                <li>FC_HemogenicWeapons_Apparel</li>
+                <li>FC_HemogenicWeapons_BloodSource</li>
+            </tags>
+        </apparel>
+        <tradeTags>
+            <li>ExoticMisc</li>
+            <li>Clothing</li>
+        </tradeTags>
+        <colorGenerator Class="ColorGenerator_Options">
+            <options>
+                <li>
+                    <weight>10</weight>
+                    <only>(0.9,0.1,0.1,1)</only>
+                </li>
+                <li>
+                    <weight>10</weight>
+                    <only>(0.8,0.01,0.1,1)</only>
+                </li>
+                <li>
+                    <weight>6</weight>
+                    <min>(0.9,0.01,0.03,1)</min>
+                    <max>(0.99,0.1,0.05,1)</max>
+                </li>
+                <li>
+                    <weight>10</weight>
+                    <only>(0.9,0.2,0.2,1)</only>
+                </li>
+            </options>
+        </colorGenerator>
+        <allowedArchonexusCount>3</allowedArchonexusCount>
+    </ThingDef>
+</Defs>
